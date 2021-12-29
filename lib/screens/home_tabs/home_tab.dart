@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:movies/api_manager/api_manager.dart';
-import 'package:movies/firebase_utils/firebase_utils.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movies/Bloc/Cubit.dart';
+import 'package:movies/Bloc/States.dart';
 import 'package:movies/models/latest_response.dart';
 import 'package:movies/models/popular_response.dart';
 import 'package:movies/models/toprated_response.dart';
-import 'package:movies/screens/home_tabs/movie_detials.dart';
 import 'package:movies/theme_app/themeApp.dart';
 import 'package:movies/widgets/home_widgets/Recomended_Widet.dart';
 import 'package:movies/widgets/home_widgets/Releases_Widget.dart';
@@ -24,13 +24,16 @@ class _HomeTabState extends State<HomeTab> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    return BlocConsumer<AppCubit,AppStates>(
+    listener: (context,state){},
+    builder:(context,state){
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
           child: Column(
             children: [
               FutureBuilder<Popular_response>(
-                future: ApiManager.apiLoadPopular(),
+                future: AppCubit.get(context).apiLoadPopular(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     //Text(snapshot.data.results[1].title,style: TextStyle(color: Colors.white,fontSize: 30),);
@@ -44,7 +47,7 @@ class _HomeTabState extends State<HomeTab> {
               ),
 
               FutureBuilder<Latest_response>(
-                future: ApiManager.apiLoadLatest(),
+                future: AppCubit.get(context).apiLoadLatest(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     //Text(snapshot.data.results[1].title,style: TextStyle(color: Colors.white,fontSize: 30),);
@@ -72,10 +75,10 @@ class _HomeTabState extends State<HomeTab> {
                                     return Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: ReleasesWidget(
-                                        iconBokemark: 'assets/bookmark.png',
-                                        imageUrl: snapshot.data.posterPath,
-                                        title:snapshot.data.title,
-                                        releaseDate:snapshot.data.releaseDate
+                                          iconBokemark: 'assets/bookmark.png',
+                                          imageUrl: snapshot.data.posterPath,
+                                          title:snapshot.data.title,
+                                          releaseDate:snapshot.data.releaseDate
                                       ),
                                     );
                                   },
@@ -97,7 +100,7 @@ class _HomeTabState extends State<HomeTab> {
               ),
 
               FutureBuilder<toprated_response>(
-                future: ApiManager.apiLoadToprated(),
+                future: AppCubit.get(context).apiLoadToprated(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     //Text(snapshot.data.results[1].title,style: TextStyle(color: Colors.white,fontSize: 30),);
@@ -124,9 +127,9 @@ class _HomeTabState extends State<HomeTab> {
                                   return Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: RecomendedWidet(
-                                      iconBokemark: 'assets/bookmark.png',
-                                      results: snapshot.data.results,
-                                      index:index
+                                        iconBokemark: 'assets/bookmark.png',
+                                        results: snapshot.data.results,
+                                        index:index
                                     ),
                                   );
                                 },
@@ -150,6 +153,8 @@ class _HomeTabState extends State<HomeTab> {
         ),
 
       ),
+    );
+    } ,
     );
   }
 

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:movies/models/popular_response.dart';
+
 
 class watchlist extends StatelessWidget {
   DocumentSnapshot results;
